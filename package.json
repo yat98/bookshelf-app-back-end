@@ -12,7 +12,8 @@
     "eslint": "^7.30.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.23.4",
-    "nodemon": "^2.0.9"
+    "nodemon": "^2.0.9",
+    "prettier": "^2.3.2"
   },
   "dependencies": {
     "nanoid": "^3.1.23"
