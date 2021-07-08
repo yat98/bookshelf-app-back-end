@@ -23,22 +23,19 @@ const addBookHandler = (request, h) => {
     } = request.payload;
 
     if (!name) {
-        const response = failResponse('Gagal menambahkan buku. Mohon isi nama buku', h);
-        response.code(400);
-        return response;
+        return failResponse('Gagal menambahkan buku. Mohon isi nama buku', h)
+            .code(400);
     }
 
     if (readPage > pageCount) {
-        const response = failResponse('Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount', h);
-        response.code(400);
-        return response;
+        return failResponse('Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount', h)
+            .code(400);
     }
 
     const id = nanoid(16);
     const insertedAt = new Date().toString();
     const updatedAt = insertedAt;
     const finished = pageCount === readPage;
-
     const newBook = {
         id,
         name,
@@ -53,22 +50,18 @@ const addBookHandler = (request, h) => {
         insertedAt,
         updatedAt,
     };
-
     books.push(newBook);
 
     const isSuccess = books.some((book) => book.id === id);
 
     if (isSuccess) {
-        const response = successResponseAll('Buku berhasil ditambahkan', {
+        return successResponseAll('Buku berhasil ditambahkan', {
             bookId: id,
-        }, h);
-        response.code(201);
-        return response;
+        }, h).code(201);
     }
 
-    const response = failResponse('Buku gagal ditambahkan', h);
-    response.code(500);
-    return response;
+    return failResponse('Buku gagal ditambahkan', h)
+        .code(500);
 };
 
 /*
@@ -105,14 +98,12 @@ const getBookByIdHandler = (request, h) => {
     const book = books.filter((b) => b.id === bookId)[0];
 
     if (book !== undefined) {
-        const response = successResponseWithData({ book }, h);
-        response.code(200);
-        return response;
+        return successResponseWithData({ book }, h)
+            .code(200);
     }
 
-    const response = failResponse('Buku tidak ditemukan', h);
-    response.code(404);
-    return response;
+    return failResponse('Buku tidak ditemukan', h)
+        .code(404);
 };
 
 /*
@@ -132,15 +123,13 @@ const updateBookHandler = (request, h) => {
     } = request.payload;
 
     if (!name) {
-        const response = failResponse('Gagal memperbarui buku. Mohon isi nama buku', h);
-        response.code(400);
-        return response;
+        return failResponse('Gagal memperbarui buku. Mohon isi nama buku', h)
+            .code(400);
     }
 
     if (readPage > pageCount) {
-        const response = failResponse('Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount', h);
-        response.code(400);
-        return response;
+        return failResponse('Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount', h)
+            .code(400);
     }
 
     const index = books.findIndex((book) => book.id === bookId);
@@ -158,14 +147,12 @@ const updateBookHandler = (request, h) => {
             reading,
         };
 
-        const response = successResponse('Buku berhasil diperbarui', h);
-        response.code(200);
-        return response;
+        return successResponse('Buku berhasil diperbarui', h)
+            .code(200);
     }
 
-    const response = failResponse('Gagal memperbarui buku. Id tidak ditemukan', h);
-    response.code(404);
-    return response;
+    return failResponse('Gagal memperbarui buku. Id tidak ditemukan', h)
+        .code(404);
 };
 
 /*
@@ -177,14 +164,12 @@ const deleteBookHandler = (request, h) => {
 
     if (index !== -1) {
         books.splice(index, 1);
-        const response = successResponse('Buku berhasil dihapus', h);
-        response.code(200);
-        return response;
+        return successResponse('Buku berhasil dihapus', h)
+            .code(200);
     }
 
-    const response = failResponse('Buku gagal dihapus. Id tidak ditemukan', h);
-    response.code(404);
-    return response;
+    return failResponse('Buku gagal dihapus. Id tidak ditemukan', h)
+        .code(404);
 };
 
 module.exports = {
