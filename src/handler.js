@@ -1,22 +1,15 @@
 const { nanoid } = require('nanoid');
 const books = require('./books');
+const {
+    failResponse,
+    successResponse,
+    successResponseWithData,
+    successResponseAll,
+} = require('./response');
 
-const failResponse = (message, h) => h.response({
-    status: 'fail', message,
-});
-
-const successResponse = (message, h) => h.response({
-    status: 'success', message,
-});
-
-const successResponseWithData = (data, h) => h.response({
-    status: 'success', data,
-});
-
-const successResponseAll = (message, data, h) => h.response({
-    status: 'success', message, data,
-});
-
+/*
+ * Add Book Method
+ */
 const addBookHandler = (request, h) => {
     const {
         name,
@@ -78,12 +71,25 @@ const addBookHandler = (request, h) => {
     return response;
 };
 
-const getAllBooksHandler = () => {
-    const data = books.map(({ id, name, publisher } = books) => ({
-        id,
-        name,
-        publisher,
-    }));
+/*
+ * Get All Book Method
+ */
+const getAllBooksHandler = (request) => {
+    const { name: bookName, reading, finished } = request.query;
+    let data = books;
+
+    if (bookName !== undefined) {
+        data = data.filter((book) => book.name.toLowerCase().includes(bookName.toLowerCase()));
+    }
+
+    if (reading !== undefined) data = data.filter((book) => book.reading === (reading === '1'));
+
+    if (finished !== undefined) data = data.filter((book) => book.finished === (finished === '1'));
+
+    data = data.map((book) => {
+        const { id, name, publisher } = book;
+        return { id, name, publisher };
+    });
 
     return {
         status: 'success',
@@ -91,6 +97,9 @@ const getAllBooksHandler = () => {
     };
 };
 
+/*
+ * Add Book By Id Method
+ */
 const getBookByIdHandler = (request, h) => {
     const { bookId } = request.params;
     const book = books.filter((b) => b.id === bookId)[0];
@@ -106,6 +115,9 @@ const getBookByIdHandler = (request, h) => {
     return response;
 };
 
+/*
+ * Update Book Method
+ */
 const updateBookHandler = (request, h) => {
     const { bookId } = request.params;
     const {
@@ -156,6 +168,9 @@ const updateBookHandler = (request, h) => {
     return response;
 };
 
+/*
+ * Delete Book Method
+ */
 const deleteBookHandler = (request, h) => {
     const { bookId } = request.params;
     const index = books.findIndex((book) => book.id === bookId);
