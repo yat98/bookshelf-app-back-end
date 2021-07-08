@@ -9,6 +9,11 @@ const init = async () => {
                 ? 'localhost'
                 : process.env.APP_PROD_URL,
         port: process.env.APP_PORT,
+        routes: {
+            cors: {
+                origin: ['*'],
+            },
+        },
     });
 
     server.route(routes);
