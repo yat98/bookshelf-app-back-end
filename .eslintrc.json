@@ -11,5 +11,8 @@
         "ecmaVersion": 12
     },
     "rules": {
+        "linebreak-style": "off",
+        "no-console": "off",
+        "indent": ["error", 4]
     }
 }
